@@ -5,12 +5,12 @@ use std::io::{Seek, SeekFrom};
 use std::path::Path;
 use structs::{Item, ItemDatabase};
 
-mod structs;
+pub mod structs;
 
 const SECRET: &str = "PBG892FXX982ABC*";
 
 #[test]
-pub fn test_load() {
+fn test_load() {
     let item_database = load_from_file("items.dat").unwrap();
     let item = item_database
         .get_item(&(item_database.item_count - 1))
