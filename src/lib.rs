@@ -9,6 +9,15 @@ mod structs;
 
 const SECRET: &str = "PBG892FXX982ABC*";
 
+#[test]
+pub fn test_load() {
+    let item_database = load_from_file("items.dat").unwrap();
+    let item = item_database
+        .get_item(&(item_database.item_count - 1).to_string())
+        .unwrap();
+    assert!(item.name != "")
+}
+
 pub fn load_from_file(path: &str) -> Result<ItemDatabase, std::io::Error> {
     let mut item_database = ItemDatabase::new();
 
@@ -59,7 +68,6 @@ pub fn load_from_file(path: &str) -> Result<ItemDatabase, std::io::Error> {
         item.extra_options = read_str(&mut reader);
         item.texture_path_2 = read_str(&mut reader);
         item.extra_option2 = read_str(&mut reader);
-        // skip 80 bit
         reader.seek(SeekFrom::Current(80))?;
 
         if item_database.version >= 11 {
@@ -93,7 +101,6 @@ pub fn load_from_file(path: &str) -> Result<ItemDatabase, std::io::Error> {
         }
         item_database.add_item(item);
     }
-
     Ok(item_database)
 }
 

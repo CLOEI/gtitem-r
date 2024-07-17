@@ -13,7 +13,7 @@ use gtitem_r::parse_from_file;
 
 fn main() {
   let item_database = parse_from_file("items.dat").unwrap();
-  let item = item_database.get("0").unwrap();
+  let item = item_database.get_item("0").unwrap();
   println!("{:?}", item)
 }
 ```
