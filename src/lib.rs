@@ -13,7 +13,7 @@ const SECRET: &str = "PBG892FXX982ABC*";
 pub fn test_load() {
     let item_database = load_from_file("items.dat").unwrap();
     let item = item_database
-        .get_item(&(item_database.item_count - 1).to_string())
+        .get_item(&(item_database.item_count - 1))
         .unwrap();
     assert!(item.name != "")
 }

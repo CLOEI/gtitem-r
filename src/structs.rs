@@ -4,7 +4,7 @@ use std::collections::HashMap;
 pub struct ItemDatabase {
     pub version: u16,
     pub item_count: u32,
-    pub items: HashMap<String, Item>,
+    pub items: HashMap<u32, Item>,
 }
 
 #[derive(Debug)]
@@ -60,10 +60,10 @@ impl ItemDatabase {
     }
 
     pub fn add_item(&mut self, item: Item) {
-        self.items.insert(item.id.to_string(), item);
+        self.items.insert(item.id.clone(), item);
     }
 
-    pub fn get_item(&self, id: &str) -> Option<&Item> {
+    pub fn get_item(&self, id: &u32) -> Option<&Item> {
         self.items.get(id)
     }
 }
