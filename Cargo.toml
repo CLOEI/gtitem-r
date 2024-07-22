@@ -9,3 +9,4 @@ readme = "README.md"
 
 [dependencies]
 byteorder = "1.5.0"
+serde = { version = "1.0.204", features = ["derive"], optional = true }

@@ -1,6 +1,9 @@
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ItemDatabase {
     pub version: u16,
     pub item_count: u32,
@@ -8,6 +11,7 @@ pub struct ItemDatabase {
 }
 
 #[derive(Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Item {
     pub id: u32,
     pub flags: u16,
