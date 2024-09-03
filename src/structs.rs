@@ -10,7 +10,7 @@ pub struct ItemDatabase {
     pub items: HashMap<u32, Item>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Item {
     pub id: u32,
@@ -67,8 +67,15 @@ impl ItemDatabase {
         self.items.insert(item.id.clone(), item);
     }
 
-    pub fn get_item(&self, id: &u32) -> Option<&Item> {
+    pub fn get_item_as_ref(&self, id: &u32) -> Option<&Item> {
         self.items.get(id)
+    }
+
+    pub fn get_item(&self, id: &u32) -> Option<Item> {
+        match self.items.get(id) {
+            Some(item) => Some(item.clone()),
+            None => None,
+        }
     }
 }
 
