@@ -8,6 +8,7 @@ pub struct ItemDatabase {
     pub version: u16,
     pub item_count: u32,
     pub items: HashMap<u32, Item>,
+    pub loaded: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -60,6 +61,7 @@ impl ItemDatabase {
             version: 0,
             item_count: 0,
             items: HashMap::new(),
+            loaded: false,
         }
     }
 
