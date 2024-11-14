@@ -33,7 +33,9 @@ pub fn load_from_memory(data: &[u8]) -> Result<ItemDatabase, std::io::Error> {
     load_from_reader(reader)
 }
 
-fn load_from_reader<R: Read + Seek>(mut reader: BufReader<R>) -> Result<ItemDatabase, std::io::Error> {
+fn load_from_reader<R: Read + Seek>(
+    mut reader: BufReader<R>,
+) -> Result<ItemDatabase, std::io::Error> {
     let mut item_database = ItemDatabase::new();
 
     item_database.version = reader.read_u16::<LittleEndian>()?;
@@ -50,7 +52,10 @@ fn load_from_reader<R: Read + Seek>(mut reader: BufReader<R>) -> Result<ItemData
     Ok(item_database)
 }
 
-fn read_item<R: Read + Seek>(reader: &mut BufReader<R>, version: u16) -> Result<Item, std::io::Error> {
+fn read_item<R: Read + Seek>(
+    reader: &mut BufReader<R>,
+    version: u16,
+) -> Result<Item, std::io::Error> {
     let mut item = Item::new();
     item.id = reader.read_u32::<LittleEndian>()?;
     item.flags = reader.read_u16::<LittleEndian>()?;
@@ -121,10 +126,12 @@ fn read_item<R: Read + Seek>(reader: &mut BufReader<R>, version: u16) -> Result<
     if version >= 18 {
         reader.seek(SeekFrom::Current(4))?;
     }
+    if version >= 19 {
+        reader.seek(SeekFrom::Current(9))?;
+    }
 
     Ok(item)
 }
-
 
 fn read_str<R: Read>(data: &mut BufReader<R>) -> String {
     let str_len = data.read_u16::<LittleEndian>().unwrap();
