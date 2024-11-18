@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{BufReader, Cursor, Read};
 use std::io::{Seek, SeekFrom};
 use std::path::Path;
-use structs::{Item, ItemDatabase};
+use structs::{Item, ItemDatabase, ItemFlag};
 
 pub mod structs;
 
@@ -39,11 +39,11 @@ fn load_from_reader<R: Read + Seek>(
     let mut item_database = ItemDatabase::new();
 
     item_database.version = reader.read_u16::<LittleEndian>()?;
-    item_database.item_count = reader.read_u32::<LittleEndian>()?;
+    item_database.item_count = reader.read_i32::<LittleEndian>()?;
 
     for _ in 0..item_database.item_count {
         let item = read_item(&mut reader, item_database.version)?;
-        if item.id != item_database.items.len() as u32 {
+        if item.id != item_database.items.len() as i32 {
             panic!("Item ID mismatch");
         }
         item_database.add_item(item);
@@ -57,8 +57,9 @@ fn read_item<R: Read + Seek>(
     version: u16,
 ) -> Result<Item, std::io::Error> {
     let mut item = Item::new();
-    item.id = reader.read_u32::<LittleEndian>()?;
-    item.flags = reader.read_u16::<LittleEndian>()?;
+    item.id = reader.read_i32::<LittleEndian>()?;
+    let flags = reader.read_u16::<LittleEndian>()?;
+    item.flags = ItemFlag::from_bits(flags);
     item.action_type = reader.read_u8()?;
     item.material = reader.read_u8()?;
     item.name = decyper_item_name(reader, item.id);
@@ -142,11 +143,11 @@ fn read_str<R: Read>(data: &mut BufReader<R>) -> String {
     str
 }
 
-fn decyper_item_name<R: Read>(data: &mut BufReader<R>, item_id: u32) -> String {
+fn decyper_item_name<R: Read>(data: &mut BufReader<R>, item_id: i32) -> String {
     let str_len = data.read_u16::<LittleEndian>().unwrap();
     let mut item_name = String::with_capacity(str_len as usize);
     for i in 0..str_len {
-        let char_pos = (i as u32 + item_id) % SECRET.len() as u32;
+        let char_pos = (i as i32 + item_id) % SECRET.len() as i32;
         let secret_char = SECRET.as_bytes()[char_pos as usize];
         let input_char = data.read_u8().unwrap();
         item_name.push((input_char ^ secret_char) as char);

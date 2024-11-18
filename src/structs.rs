@@ -6,16 +6,60 @@ use std::collections::HashMap;
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ItemDatabase {
     pub version: u16,
-    pub item_count: u32,
-    pub items: HashMap<u32, Item>,
+    pub item_count: i32,
+    pub items: HashMap<i32, Item>,
     pub loaded: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct ItemFlag {
+    pub flippable: bool,
+    pub editable: bool,
+    pub seedless: bool,
+    pub permanent: bool,
+    pub dropless: bool,
+    pub no_self: bool,
+    pub no_shadow: bool,
+    pub world_locked: bool,
+    pub beta: bool,
+    pub auto_pickup: bool,
+    pub mod_flag: bool,
+    pub random_grow: bool,
+    pub public: bool,
+    pub foreground: bool,
+    pub holiday: bool,
+    pub untradeable: bool,
+}
+
+impl ItemFlag {
+    pub fn from_bits(bits: u16) -> ItemFlag {
+        ItemFlag {
+            flippable: bits & 0x1 != 0,
+            editable: bits & 0x2 != 0,
+            seedless: bits & 0x4 != 0,
+            permanent: bits & 0x8 != 0,
+            dropless: bits & 0x10 != 0,
+            no_self: bits & 0x20 != 0,
+            no_shadow: bits & 0x40 != 0,
+            world_locked: bits & 0x80 != 0,
+            beta: bits & 0x100 != 0,
+            auto_pickup: bits & 0x200 != 0,
+            mod_flag: bits & 0x400 != 0,
+            random_grow: bits & 0x800 != 0,
+            public: bits & 0x1000 != 0,
+            foreground: bits & 0x2000 != 0,
+            holiday: bits & 0x4000 != 0,
+            untradeable: bits & 0x8000 != 0,
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Item {
-    pub id: u32,
-    pub flags: u16,
+    pub id: i32,
+    pub flags: ItemFlag,
     pub action_type: u8,
     pub material: u8,
     pub name: String,
@@ -69,11 +113,11 @@ impl ItemDatabase {
         self.items.insert(item.id.clone(), item);
     }
 
-    pub fn get_item_as_ref(&self, id: &u32) -> Option<&Item> {
+    pub fn get_item_as_ref(&self, id: &i32) -> Option<&Item> {
         self.items.get(id)
     }
 
-    pub fn get_item(&self, id: &u32) -> Option<Item> {
+    pub fn get_item(&self, id: &i32) -> Option<Item> {
         match self.items.get(id) {
             Some(item) => Some(item.clone()),
             None => None,
@@ -85,7 +129,24 @@ impl Item {
     pub fn new() -> Item {
         Item {
             id: 0,
-            flags: 0,
+            flags: ItemFlag {
+                flippable: false,
+                editable: false,
+                seedless: false,
+                permanent: false,
+                dropless: false,
+                no_self: false,
+                no_shadow: false,
+                world_locked: false,
+                beta: false,
+                auto_pickup: false,
+                mod_flag: false,
+                random_grow: false,
+                public: false,
+                foreground: false,
+                holiday: false,
+                untradeable: false,
+            },
             action_type: 0,
             material: 0,
             name: String::new(),
