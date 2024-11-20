@@ -6,8 +6,8 @@ use std::collections::HashMap;
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ItemDatabase {
     pub version: u16,
-    pub item_count: i32,
-    pub items: HashMap<i32, Item>,
+    pub item_count: u32,
+    pub items: HashMap<u32, Item>,
     pub loaded: bool,
 }
 
@@ -58,7 +58,7 @@ impl ItemFlag {
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Item {
-    pub id: i32,
+    pub id: u32,
     pub flags: ItemFlag,
     pub action_type: u8,
     pub material: u8,
@@ -113,11 +113,11 @@ impl ItemDatabase {
         self.items.insert(item.id.clone(), item);
     }
 
-    pub fn get_item_as_ref(&self, id: &i32) -> Option<&Item> {
+    pub fn get_item_as_ref(&self, id: &u32) -> Option<&Item> {
         self.items.get(id)
     }
 
-    pub fn get_item(&self, id: &i32) -> Option<Item> {
+    pub fn get_item(&self, id: &u32) -> Option<Item> {
         match self.items.get(id) {
             Some(item) => Some(item.clone()),
             None => None,
