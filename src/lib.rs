@@ -130,6 +130,9 @@ fn read_item<R: Read + Seek>(
     if version >= 19 {
         reader.seek(SeekFrom::Current(9))?;
     }
+    if version >= 21 {
+        reader.seek(SeekFrom::Current(2))?;
+    }
 
     Ok(item)
 }
