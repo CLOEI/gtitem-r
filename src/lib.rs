@@ -133,6 +133,9 @@ fn read_item<R: Read + Seek>(
     if version >= 21 {
         reader.seek(SeekFrom::Current(2))?;
     }
+    if version >= 22 {
+        item.description = read_str(reader);
+    }
 
     Ok(item)
 }

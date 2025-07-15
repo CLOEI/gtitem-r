@@ -97,6 +97,7 @@ pub struct Item {
     pub texture_path_2: String,
     pub extra_option2: String,
     pub punch_option: String,
+    pub description: String,
 }
 
 impl ItemDatabase {
@@ -184,6 +185,7 @@ impl Item {
             texture_path_2: String::new(),
             extra_option2: String::new(),
             punch_option: String::new(),
+            description: String::new(),
         }
     }
 }
