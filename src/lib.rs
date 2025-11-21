@@ -136,6 +136,10 @@ fn read_item<R: Read + Seek>(
     if version >= 22 {
         item.description = read_str(reader);
     }
+    if version >= 23 {
+        // Item recipe, 2 bytes + 2 bytes, needs parsing
+        reader.seek(SeekFrom::Current(4))?;
+    }
 
     Ok(item)
 }
