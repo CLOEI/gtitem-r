@@ -21,6 +21,21 @@ fn test_load() {
     assert!(item.name != "")
 }
 
+#[test]
+fn test_version() {
+    let file = File::open("items.dat").unwrap();
+    let mut reader = BufReader::new(file);
+    let expected_version = 24;
+    let version = reader.read_u16::<LittleEndian>().unwrap();
+
+    assert!(
+        version == expected_version,
+        "Invalid items.dat version: Expected {}, Got {}",
+        expected_version,
+        version
+    )
+}
+
 pub fn load_from_file<P: AsRef<Path>>(path: P) -> Result<ItemDatabase, std::io::Error> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
@@ -139,6 +154,10 @@ fn read_item<R: Read + Seek>(
     if version >= 23 {
         // Item recipe, 2 bytes + 2 bytes, needs parsing
         reader.seek(SeekFrom::Current(4))?;
+    }
+    if version >= 24 {
+        // fix (5.39)
+        reader.seek(SeekFrom::Current(1))?;
     }
 
     Ok(item)
