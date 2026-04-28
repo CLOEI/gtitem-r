@@ -98,6 +98,8 @@ pub struct Item {
     pub extra_option2: String,
     pub punch_option: String,
     pub description: String,
+    pub hit_sound_fx: String,
+    pub hit_sound_fx_hash: u32,
 }
 
 impl ItemDatabase {
@@ -186,6 +188,8 @@ impl Item {
             extra_option2: String::new(),
             punch_option: String::new(),
             description: String::new(),
+            hit_sound_fx: String::new(),
+            hit_sound_fx_hash: 0,
         }
     }
 }
