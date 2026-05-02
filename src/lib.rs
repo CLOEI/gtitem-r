@@ -163,6 +163,9 @@ fn read_item<R: Read + Seek>(
         item.hit_sound_fx = read_str(reader); // e.g. "BandageCannonPlayerHitFx"
         item.hit_sound_fx_hash = reader.read_u32::<LittleEndian>()?;
     }
+    if version >= 26 {
+        reader.seek(SeekFrom::Current(1))?;
+    }
 
     Ok(item)
 }
