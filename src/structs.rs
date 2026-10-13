@@ -100,6 +100,7 @@ pub struct Item {
     pub description: String,
     pub hit_sound_fx: String,
     pub hit_sound_fx_hash: u32,
+    pub unknown_v27: String
 }
 
 impl ItemDatabase {
@@ -190,6 +191,7 @@ impl Item {
             description: String::new(),
             hit_sound_fx: String::new(),
             hit_sound_fx_hash: 0,
+            unknown_v27: String::new(),
         }
     }
 }
