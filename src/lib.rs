@@ -166,6 +166,11 @@ fn read_item<R: Read + Seek>(
     if version >= 26 {
         reader.seek(SeekFrom::Current(1))?;
     }
+    if version >= 27 {
+        // New trailing length-prefixed string. It's empty (00 00) for nearly every
+        // item; so far only the "Immortal ..." items carry a value ("6").
+        item.unknown_v27 = read_str(reader);
+    }
 
     Ok(item)
 }
